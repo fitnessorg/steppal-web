@@ -1,0 +1,157 @@
+@import "tailwindcss";
+
+/* ══════════════════════════════════════════════════════════════════════════
+   DESIGN TOKENS
+
+   Every colour and size in the site resolves here. Changing this block
+   re-skins everything; no component hardcodes a value.
+
+   The ground is warm near-black rather than cold — paired with the chartreuse
+   it reads as effort and daylight rather than gaming neon. Clay is reserved
+   exclusively for money figures, so naira amounts are recognisable at a glance
+   without a label.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+@theme {
+  /* ---- colour ---- */
+  --color-ground: #0C0A08;        /* warm near-black */
+  --color-surface: #16130F;       /* raised panels */
+  --color-surface-2: #221D17;     /* borders, dividers, inputs */
+
+  --color-ink: #F7F2E9;           /* primary text, warm off-white */
+  --color-ink-soft: #A9A093;      /* secondary text */
+  --color-ink-faint: #6B6459;     /* labels, metadata */
+
+  --color-accent: #D6F035;        /* chartreuse — the one committed accent */
+  --color-accent-ink: #0C0A08;    /* text on accent */
+
+  --color-money: #E8875A;         /* warm clay — naira figures only */
+  --color-danger: #E5645C;
+
+  /* ---- type ---- */
+  --font-display: "Unbounded Variable", "Arial Black", sans-serif;
+  --font-body: "Instrument Sans Variable", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
+
+  /* Display sizes are viewport-relative — they are the design. */
+  --text-hero: clamp(3.5rem, 13vw, 15rem);
+  --text-display: clamp(2.75rem, 8vw, 8rem);
+  --text-section: clamp(2rem, 5vw, 4.5rem);
+  --text-lead: clamp(1.15rem, 2vw, 1.6rem);
+  --text-body: 1.0625rem;
+  --text-label: 0.6875rem;
+
+  /* ---- rhythm ---- */
+  --spacing-gutter: clamp(1.25rem, 4vw, 4rem);
+  --spacing-section: clamp(6rem, 14vh, 12rem);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   BASE
+   ══════════════════════════════════════════════════════════════════════════ */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  /* Lenis drives scrolling; native smooth-scroll would fight it. */
+  scroll-behavior: auto;
+}
+
+body {
+  background: var(--color-ground);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   TYPE PRIMITIVES
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/*
+   These live in @layer components so Tailwind utilities still win. Unlayered
+   rules beat every utility in Tailwind 4 — a `.t-section { margin: 0 }` sitting
+   outside a layer silently eats every `mb-*` you put on a heading.
+*/
+@layer components {
+  .t-hero,
+  .t-display,
+  .t-section {
+    font-family: var(--font-display);
+    font-weight: 800;
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  .t-hero    { font-size: var(--text-hero); letter-spacing: -0.05em; }
+  .t-display { font-size: var(--text-display); }
+  .t-section { font-size: var(--text-section); letter-spacing: -0.03em; }
+
+  .t-lead {
+    font-size: var(--text-lead);
+    line-height: 1.4;
+    color: var(--color-ink-soft);
+    text-wrap: pretty;
+  }
+
+  .t-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+  }
+
+  .t-num {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   MOTION SUPPORT
+
+   SplitText's mask wrappers need overflow hidden. Lines must still be able to
+   render descenders, so the mask gets a little vertical breathing room.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.reveal-line {
+  will-change: transform;
+}
+
+/*
+   Nothing is parked invisible. GSAP sets its own from-state at runtime, so if
+   JS never runs the page is still fully readable — which is the point.
+*/
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
