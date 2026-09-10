@@ -1,8 +1,17 @@
+import Image from 'next/image';
+
 export function Footer() {
   return (
     <footer className="border-t border-surface-2 px-(--spacing-gutter) py-14">
       <div className="flex flex-col gap-10 md:flex-row md:justify-between">
         <div>
+          <Image
+            src="/steppal-mark.png"
+            alt="StepPal"
+            width={514}
+            height={354}
+            className="logo-mark mb-5 h-14 w-auto"
+          />
           <p className="font-(family-name:--font-display) text-2xl tracking-tight">
             StepPal
           </p>
@@ -14,7 +23,7 @@ export function Footer() {
         <nav className="flex gap-14 text-sm" aria-label="Footer">
           <div className="flex flex-col gap-3">
             <span className="t-label">Project</span>
-            <a href="https://github.com/steppal" className="text-ink-soft hover:text-ink">
+            <a href="https://github.com/fitnessorg" className="text-ink-soft hover:text-ink">
               GitHub
             </a>
             <a href="#contribute" className="text-ink-soft hover:text-ink">

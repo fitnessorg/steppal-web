@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { SmoothScroll } from '@/components/SmoothScroll';
+import { Header } from '@/components/Header';
 
 /*
   Fonts ship from npm rather than next/font/google: the woff2 files are in the
@@ -39,15 +40,33 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#0A0B0A',
-  colorScheme: 'dark',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#F5F4F1' },
+    { media: '(prefers-color-scheme: dark)', color: '#0C0A08' },
+  ],
+  colorScheme: 'light dark',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        {/*
+          Runs before paint so an explicit theme choice never flashes the wrong
+          ground. No stored value means follow the OS, and nothing is stamped.
+        */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem('theme');if(t){document.documentElement.setAttribute('data-theme',t)}}catch(e){}`,
+          }}
+        />
+      </head>
       <body>
-        <SmoothScroll>{children}</SmoothScroll>
+        <div className="frame" aria-hidden />
+        <SmoothScroll>
+          <Header />
+          {children}
+        </SmoothScroll>
       </body>
     </html>
   );

@@ -28,7 +28,7 @@ const STEPS = [
  */
 export function HowItWorks() {
   return (
-    <section className="px-(--spacing-gutter) py-(--spacing-section)">
+    <section id="how" className="px-(--spacing-gutter) py-(--spacing-section)">
       <p className="t-label mb-8">How it works</p>
 
       <RevealText as="h2" className="t-section mb-20 max-w-[13ch]">

@@ -31,7 +31,7 @@ export function OpenSource() {
     <section id="contribute" className="px-(--spacing-gutter) py-(--spacing-section)">
       <div className="grid gap-16 md:grid-cols-[1fr_1.4fr]">
         <div>
-          <p className="t-label mb-8">Open source</p>
+          <p className="t-label mb-8 text-cool">Open source</p>
           <RevealText as="h2" className="t-section max-w-[12ch]">
             Built in the open. Come and break it.
           </RevealText>
@@ -44,8 +44,8 @@ export function OpenSource() {
             , you can finish it in an evening.
           </p>
           <a
-            href="https://github.com/steppal"
-            className="mt-8 inline-flex items-center gap-2 border-b border-accent pb-1 text-accent"
+            href="https://github.com/fitnessorg"
+            className="mt-8 inline-flex items-center gap-2 border-b border-cool pb-1 text-cool"
           >
             Browse the issues
             <span aria-hidden>↗</span>
@@ -56,7 +56,7 @@ export function OpenSource() {
           {REPOS.map((r, i) => (
             <Reveal key={r.name} delay={i * 0.06}>
               <a
-                href={`https://github.com/steppal/${r.name}`}
+                href={`https://github.com/fitnessorg/${r.name}`}
                 className="group grid gap-2 border-t border-surface-2 py-7 transition-colors hover:bg-surface"
               >
                 <div className="flex items-baseline justify-between gap-4">

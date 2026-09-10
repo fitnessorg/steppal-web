@@ -13,20 +13,32 @@
    ══════════════════════════════════════════════════════════════════════════ */
 
 @theme {
-  /* ---- colour ---- */
-  --color-ground: #0C0A08;        /* warm near-black */
-  --color-surface: #16130F;       /* raised panels */
-  --color-surface-2: #221D17;     /* borders, dividers, inputs */
+  /* ---- colour: light is the base, dark overrides below ---- */
+  --color-ground: #F5F4F1;        /* crisp warm white */
+  --color-surface: #FFFFFF;       /* raised panels */
+  --color-surface-2: #E3E0D9;     /* borders, dividers, inputs */
 
-  --color-ink: #F7F2E9;           /* primary text, warm off-white */
-  --color-ink-soft: #A9A093;      /* secondary text */
-  --color-ink-faint: #6B6459;     /* labels, metadata */
+  --color-ink: #14120F;           /* primary text */
+  --color-ink-soft: #56514A;      /* secondary text */
+  --color-ink-faint: #8A847A;     /* labels, metadata */
 
-  --color-accent: #D6F035;        /* chartreuse — the one committed accent */
-  --color-accent-ink: #0C0A08;    /* text on accent */
+  --color-accent: #C4DE18;        /* chartreuse — buttons and highlights */
+  --color-accent-ink: #14120F;    /* text on accent */
 
-  --color-money: #E8875A;         /* warm clay — naira figures only */
-  --color-danger: #E5645C;
+  --color-flame: #FF4A1C;         /* the frame. energy, urgency, the jolt */
+  --color-flame-ink: #FFFFFF;
+
+  --color-money: #C2551F;         /* naira figures, and only those */
+
+  /*
+     The hero stage stays light in BOTH themes. The logo is a dark product
+     render, so a flipping backdrop would either hide it or force an invert
+     that turns black shoes white — changing the product itself. A constant
+     stage is what the reference does, and it keeps the artwork honest.
+  */
+  --color-stage: #EAE6DE;
+  --color-cool: #4C63D2;          /* the developer section, and only there */
+  --color-danger: #C4382F;
 
   /* ---- type ---- */
   --font-display: "Unbounded Variable", "Arial Black", sans-serif;
@@ -44,6 +56,56 @@
   /* ---- rhythm ---- */
   --spacing-gutter: clamp(1.25rem, 4vw, 4rem);
   --spacing-section: clamp(6rem, 14vh, 12rem);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   DARK THEME
+
+   Three states, not two. An explicit choice stamps data-theme on <html>; the
+   default "system" setting stamps nothing, so prefers-color-scheme has to
+   carry it — guarded so an explicit light choice still beats a dark OS.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --color-ground: #0C0A08;
+    --color-surface: #16130F;
+    --color-surface-2: #262019;
+
+    --color-ink: #F7F2E9;
+    --color-ink-soft: #A9A093;
+    --color-ink-faint: #6B6459;
+
+    --color-accent: #D6F035;
+    --color-accent-ink: #0C0A08;
+
+    --color-flame: #FF4A1C;
+    --color-flame-ink: #0C0A08;
+
+    --color-money: #E8875A;
+    --color-cool: #8DA0FF;
+    --color-danger: #E5645C;
+  }
+}
+
+:root[data-theme='dark'] {
+  --color-ground: #0C0A08;
+  --color-surface: #16130F;
+  --color-surface-2: #262019;
+
+  --color-ink: #F7F2E9;
+  --color-ink-soft: #A9A093;
+  --color-ink-faint: #6B6459;
+
+  --color-accent: #D6F035;
+  --color-accent-ink: #0C0A08;
+
+  --color-flame: #FF4A1C;
+  --color-flame-ink: #0C0A08;
+
+  --color-money: #E8875A;
+  --color-cool: #8DA0FF;
+  --color-danger: #E5645C;
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -71,8 +133,56 @@ body {
 }
 
 ::selection {
-  background: var(--color-accent);
-  color: var(--color-accent-ink);
+  background: var(--color-flame);
+  color: var(--color-flame-ink);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   THE FRAME
+
+   A fixed flame border around the viewport. It stays put while the page
+   scrolls behind it, so the whole site reads as one held object rather than a
+   document that runs off the edges. Body padding keeps content clear of it.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+body {
+  padding: var(--frame-w);
+}
+
+.frame {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  border: var(--frame-w) solid var(--color-flame);
+}
+
+:root {
+  --frame-w: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --frame-w: 1rem;
+  }
+}
+
+/*
+   The logo is dark artwork on transparency, so it needs inverting to stay
+   legible on the dark ground. Greyscale art inverts cleanly.
+*/
+.logo-mark {
+  filter: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .logo-mark {
+    filter: invert(1) brightness(1.15);
+  }
+}
+
+:root[data-theme='dark'] .logo-mark {
+  filter: invert(1) brightness(1.15);
 }
 
 :focus-visible {

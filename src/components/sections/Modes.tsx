@@ -11,7 +11,7 @@ import { Counter } from '@/components/Counter';
  */
 export function Modes() {
   return (
-    <section className="px-(--spacing-gutter) py-(--spacing-section)">
+    <section id="modes" className="px-(--spacing-gutter) py-(--spacing-section)">
       <p className="t-label mb-8">Two ways to play</p>
 
       <RevealText as="h2" className="t-section mb-20 max-w-[14ch]">
