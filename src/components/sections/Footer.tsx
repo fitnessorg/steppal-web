@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
 export function Footer() {
   return (
@@ -26,18 +27,21 @@ export function Footer() {
             <a href="https://github.com/fitnessorg" className="text-ink-soft hover:text-ink">
               GitHub
             </a>
-            <a href="#contribute" className="text-ink-soft hover:text-ink">
+            <Link href="/contribute" className="text-ink-soft hover:text-ink">
               Contribute
-            </a>
+            </Link>
+            <Link href="/architecture" className="text-ink-soft hover:text-ink">
+              Architecture
+            </Link>
           </div>
           <div className="flex flex-col gap-3">
             <span className="t-label">Legal</span>
-            <a href="/privacy" className="text-ink-soft hover:text-ink">
+            <Link href="/privacy" className="text-ink-soft hover:text-ink">
               Privacy
-            </a>
-            <a href="/terms" className="text-ink-soft hover:text-ink">
+            </Link>
+            <Link href="/terms" className="text-ink-soft hover:text-ink">
               Terms
-            </a>
+            </Link>
           </div>
         </nav>
       </div>

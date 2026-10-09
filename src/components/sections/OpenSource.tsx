@@ -1,6 +1,7 @@
 'use client';
 
 import { RevealText } from '@/components/RevealText';
+import Link from 'next/link';
 import { Reveal } from '@/components/Reveal';
 
 const REPOS = [
@@ -43,13 +44,22 @@ export function OpenSource() {
             </code>
             , you can finish it in an evening.
           </p>
-          <a
-            href="https://github.com/fitnessorg"
-            className="mt-8 inline-flex items-center gap-2 border-b border-cool pb-1 text-cool"
-          >
-            Browse the issues
-            <span aria-hidden>↗</span>
-          </a>
+          <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-3">
+            <Link
+              href="/contribute"
+              className="inline-flex items-center gap-2 border-b border-cool pb-1 text-cool"
+            >
+              How to contribute
+              <span aria-hidden>→</span>
+            </Link>
+            <a
+              href="https://github.com/fitnessorg"
+              className="inline-flex items-center gap-2 border-b border-surface-2 pb-1 text-ink-soft"
+            >
+              Browse the issues
+              <span aria-hidden>↗</span>
+            </a>
+          </div>
         </div>
 
         <div className="flex flex-col">

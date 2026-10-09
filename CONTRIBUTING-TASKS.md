@@ -1,76 +1,90 @@
 # Contributor tasks
 
-The site is built to ~65% on purpose. What's below is the rest — real work, not
-busywork. Each maps to a `TODO(contributor):` marker in the code.
-
-File these as GitHub issues with the difficulty as a label.
+Open work on the site. Everything here is scoped to a single file or a single
+page — this repo is small on purpose.
 
 ---
 
-## Easy
+## Good first issues
 
-### Wire up waitlist submission
-**File:** `src/components/sections/Waitlist.tsx`
+### Open Graph images
+**File:** `src/app/opengraph-image.tsx` (new) · **Difficulty:** easy
 
-The form validates and manages its own state, but nothing is persisted. Add a
-route handler at `src/app/api/waitlist/route.ts` that stores the address (Resend
-audience, or a table in `steppal-core`). Handle duplicate signups gracefully and
-surface real errors in the UI rather than always showing success.
+Links to the site unfurl with no image. Add a generated OG image using Next's
+`ImageResponse`, and a per-page one for `/architecture` and `/contribute`.
 
-### Add the favicon and OG image
-**Files:** `src/app/icon.tsx`, `src/app/opengraph-image.tsx`
+**Done when:** a shared link shows a StepPal card rather than a bare title.
 
-Metadata is declared in `layout.tsx` but there's no actual image. Build a
-generated OG card using `next/og` — the wordmark on the ground colour, with the
-tagline. This is the first thing most people see, because the link gets pasted
-into WhatsApp groups.
+### A real 404
+**File:** `src/app/not-found.tsx` (new) · **Difficulty:** easy
 
-### Privacy and terms pages
-**Files:** `src/app/privacy/page.tsx`, `src/app/terms/page.tsx`
+The default Next 404 does not look like this site at all. Give it the frame,
+the type scale, and a way back.
 
-Footer links to both and neither exists. Health data and money both need real
-policies — Play Store review will ask for the privacy URL specifically.
+### Anchor links on the document pages
+**File:** `src/components/Prose.tsx` · **Difficulty:** easy
 
----
+`/architecture` is long and nothing in it is linkable. Give the headings ids
+and a hover anchor, so a contributor can point at a specific section.
 
-## Medium
+### Keyboard focus audit
+**Difficulty:** easy
 
-### Mobile motion pass
-**File:** `src/components/sections/Showcase.tsx`
-
-The pinned showcase is designed for desktop. On narrow screens pinning is
-disabled but the section hasn't been reconsidered — it should probably become a
-horizontal swipe or a simple stack. Decide, then build it.
-
-### Real device frames
-**File:** `src/components/sections/Showcase.tsx`
-
-Phone screens are hand-built markup, which is fine for now but drifts from the
-real app. Replace with actual screenshots from `steppal-mobile` once the app
-has screens worth showing, and keep the mock as the fallback.
-
-### Nav bar
-**Doesn't exist yet.**
-
-There's no navigation at all. Add one that hides on scroll-down and reappears on
-scroll-up, driven by the existing Lenis instance rather than a scroll listener.
-Must not fight the pinned section.
+There is a skip link and a global focus ring. Tab through every page and find
+what is still unreachable or invisible — the theme toggle, the magnetic button
+and the pinned showcase are the likely suspects.
 
 ---
 
-## Hard
+## Features
 
-### Page transitions
-**Doesn't exist yet.**
+### Durable waitlist storage
+**File:** `src/lib/waitlist.ts` · **Difficulty:** medium
 
-An overlay wipe on route change using the accent colour, under 600ms. Needs to
-work with Lenis (scroll position reset) and not break ScrollTrigger. Start with
-the View Transitions API and fall back to a GSAP overlay.
+The memory store loses signups on redeploy and the Resend path is untested
+against the live API. Add a third store that posts to steppal-core, so signups
+land in the same Postgres as everything else, and pick it up from an env var
+like the others.
 
-### Performance pass on low-end Android
-**Everywhere.**
+**Done when:** signups survive a redeploy, and the memory store is still the
+default so the repo runs with no configuration.
 
-Target is 60fps on a mid-range Android device. Profile a real one — not a
-throttled desktop — and fix what's slow. Likely suspects: SplitText re-splitting
-on resize, the number of simultaneous ScrollTriggers, and `will-change`
-lingering after animations finish.
+### Double-submit protection on the client
+**File:** `src/components/sections/Waitlist.tsx` · **Difficulty:** easy
+
+The button disables while sending, but a fast double-tap on a slow connection
+can still fire twice. The server dedupes, so this is cosmetic — but the second
+request burns a rate-limit slot.
+
+### A changelog page
+**Difficulty:** medium
+
+Three repos are moving and there is nowhere that says what shipped. Read the
+GitHub releases API at build time and render them.
+
+---
+
+## Performance and quality
+
+### Lighthouse pass
+**Difficulty:** medium
+
+Never measured. Likely suspects: the hero PNG is 218KB and unoptimised, three
+variable font families load on every page including the document pages that
+only need two, and GSAP plus Lenis are in the bundle of pages with no motion.
+
+**Done when:** there is a recorded baseline and at least the font and image
+wins are taken.
+
+### Split motion out of the document pages
+**File:** `src/app/layout.tsx` · **Difficulty:** medium
+
+`SmoothScroll` mounts on every route, including `/privacy`, which has nothing
+to scroll-animate. Move it to the landing page, or make it a route group.
+
+### Tests for the components
+**Difficulty:** medium
+
+The 15 existing tests cover `src/lib` only. The parts most likely to break
+silently are the theme toggle's store (it has a server snapshot and a storage
+listener) and the waitlist form's state machine.

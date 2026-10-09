@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { SmoothScroll } from '@/components/SmoothScroll';
 import { Header } from '@/components/Header';
+import { siteUrl } from '@/lib/site';
 
 /*
   Fonts ship from npm rather than next/font/google: the woff2 files are in the
@@ -17,7 +18,7 @@ import '@fontsource-variable/jetbrains-mono';
 
 import './globals.css';
 
-const SITE = 'https://steppal.app';
+const SITE = siteUrl();
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),
@@ -62,6 +63,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
+        {/*
+          First thing in the tab order. Keyboard users should not have to walk
+          the whole nav on every page to reach what they came for.
+        */}
+        <a href="#main" className="skip-link">
+          Skip to content
+        </a>
         <div className="frame" aria-hidden />
         <SmoothScroll>
           <Header />

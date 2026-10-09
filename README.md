@@ -1,11 +1,13 @@
-# steppal-web
+# StepPal — web
 
-Marketing site for **StepPal** — an open-source app where friends form a group,
-everyone stakes money, and at the end of the week it settles based on who
-actually walked.
+The site for [StepPal](https://github.com/fitnessorg), a commitment app where
+you put money behind a step goal and a contract holds it until you have either
+earned it back or lost it.
 
-This site doesn't run the product. It exists to make people want the app and to
-make developers want to contribute.
+This repo is **informational only** — it ships no product features. The app is
+[steppal-mobile](https://github.com/fitnessorg/steppal-mobile); the API,
+settlement rules and Soroban escrow are in
+[steppal-core](https://github.com/fitnessorg/steppal-core).
 
 ## Run it
 
@@ -14,66 +16,85 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:3000.
+No accounts, no API keys, no services. The waitlist form works out of the box
+against an in-memory store that logs to your terminal.
 
-## Stack
+```bash
+npm run build       # production build
+npm test            # 15 tests
+npm run lint
+npm run typecheck
+```
 
-| | |
-|---|---|
-| Framework | Next.js 16 (App Router), React 19, TypeScript strict |
-| Styling | Tailwind 4 — tokens live in `src/app/globals.css` |
-| Scroll | [Lenis](https://github.com/darkroomengineering/lenis) |
-| Animation | GSAP + ScrollTrigger + SplitText |
-| Fonts | `@fontsource-variable/*` — self-hosted from npm, no build-time network call |
+## Pages
 
-## How the design is organised
+| Route | What it is |
+| --- | --- |
+| `/` | The landing page — nine scroll-driven sections |
+| `/contribute` | How to pick up work across the three repos |
+| `/architecture` | Where the money sits and who may move it |
+| `/privacy` | What the app collects, and what it deliberately does not |
+| `/terms` | The deal, in plain words |
+| `/api/waitlist` | `POST { email }` — validation, dedupe, honeypot, rate limit |
 
-**Every colour and size resolves in `src/app/globals.css`.** No component
-hardcodes a value, so changing that `@theme` block re-skins the whole site.
+## The waitlist is real
 
-- Ground is warm near-black rather than cold — with the chartreuse accent it
-  reads as effort and daylight rather than gaming neon.
-- Clay (`--color-money`) is reserved **exclusively** for naira figures, so money
-  is recognisable at a glance without a label. Don't spend it elsewhere.
-- Type primitives (`.t-hero`, `.t-section`, `.t-label`, `.t-num`) live in
-  `@layer components` so Tailwind utilities still override them. Unlayered CSS
-  beats every utility in Tailwind 4 — that's a real trap.
+`src/lib/waitlist.ts` holds validation and a pluggable store, kept out of the
+route handler so both can be tested without a request.
 
-## How the motion is organised
+- **Memory store by default.** Logs to stdout and dedupes for the life of the
+  process. This is what makes the form genuinely work from a fresh clone — a
+  contributor can submit it, see the success state, and watch the address land
+  in the terminal. It is not durable and says so.
+- **Resend when configured.** Set `RESEND_API_KEY` and `RESEND_AUDIENCE_ID` and
+  signups go to a Resend audience. One `fetch`, no SDK.
+- **A honeypot field** named `company`, hidden from people and from screen
+  readers. A filled honeypot gets the same answer a real signup does, because
+  telling a bot it was caught only teaches whoever wrote it.
+- **A fixed-window rate limit per client**, in memory. Honest about its limits:
+  serverless means several instances, each with its own counter. It raises the
+  cost of a casual script, which is the actual threat to a form like this.
 
-`src/lib/motion.ts` holds the whole vocabulary: easing, durations, stagger,
-trigger points. **Tune the feel there, not in components.**
+Email validation is deliberately permissive. Addresses are stranger than most
+regexes allow, and the only authority on whether one works is the mail server —
+rejecting a real address costs a signup, which is worse than storing one that
+bounces.
 
-The register is *heavy and smooth* — weighted easing, generous durations.
-Nothing bouncy, springy or snappy. `back`, `elastic` and `bounce` are banned.
+## Motion
 
-Building blocks:
+Everything pulls its easing and duration from `src/lib/motion.ts`. Never inline
+a raw cubic-bezier or a magic number in a component — one file is what keeps
+nine sections feeling like one site.
 
-| Component | Does |
-|---|---|
-| `SmoothScroll` | Mounts Lenis, drives it from GSAP's ticker so both share one RAF loop |
-| `RevealText` | Masked line reveal — the primitive everything else builds on |
-| `Reveal` | Generic entry reveal for non-text blocks |
-| `Counter` | Number ticks up on entry, tabular-nums so nothing jitters |
-| `MagneticButton` | CTA drifts toward the cursor, pointer-fine devices only |
+GSAP with ScrollTrigger for reveals, Lenis for smooth scroll, driven from GSAP's
+ticker so both share a single RAF loop. Two independent loops is the usual cause
+of jittery scroll-linked animation.
 
-### Rules that aren't negotiable
+**`prefers-reduced-motion` is honoured throughout.** Lenis does not mount at
+all, reveals become opacity-only, the counter renders its final value, and the
+magnetic button stops tracking. The document pages have no motion by design —
+a page that animates while you are trying to read it fights you.
 
-- **`prefers-reduced-motion`** degrades everything to opacity fades and disables
-  Lenis. Test it.
-- **Transform and opacity only.** Never animate layout properties.
-- **Nothing parked at `opacity: 0`.** GSAP sets its own from-state at runtime,
-  so if JS fails the page is still fully readable.
-- **`ScrollTrigger.refresh()` after fonts load** — already wired in
-  `SmoothScroll`. Fonts landing late is the classic cause of triggers firing at
-  the wrong scroll position.
-- Target is **60fps on a mid-range Android**, not your laptop. That's who opens
-  this from a WhatsApp link.
+## Two things that will bite you
+
+**Tailwind 4 unlayered CSS beats every utility.** A bare `.t-section { margin: 0 }`
+outside a layer ate a `mb-20` and collided two sections. Type primitives live in
+`@layer components` for exactly this reason. Put new component classes there.
+
+**Fonts ship from npm, not `next/font/google`.** The woff2 files are in the
+lockfile, so builds need no network and are reproducible. Three variable
+families, three files.
+
+## Deploying
+
+The canonical origin is read from the environment, never hard-coded — the
+domain is not owned yet, and a wrong canonical URL on every page is worse than
+no domain. `src/lib/site.ts` prefers `NEXT_PUBLIC_SITE_URL`, falls back to
+Vercel's `VERCEL_PROJECT_PRODUCTION_URL` so a fresh deploy is already correct,
+and otherwise uses localhost.
 
 ## Contributing
 
-Real tasks are in [`CONTRIBUTING-TASKS.md`](./CONTRIBUTING-TASKS.md). The site is
-built to roughly 65% on purpose — the rest is deliberately left for
-contributors, marked in code with `TODO(contributor):`.
+See [CONTRIBUTING-TASKS.md](./CONTRIBUTING-TASKS.md) and the `/contribute` page.
 
-Apache-2.0.
+MIT. See [LICENSE](./LICENSE).
