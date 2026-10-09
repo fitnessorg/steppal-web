@@ -36,7 +36,7 @@ export function OpenSource() {
             Built in the open. Come and break it.
           </RevealText>
           <p className="mt-6 max-w-[38ch] text-ink-soft">
-            StepPal is Apache-2.0 and built to be contributed to. Issues are scoped
+            StepPal is MIT licensed and built to be contributed to. Issues are scoped
             small and labelled honestly — if it says{' '}
             <code className="rounded bg-surface-2 px-1.5 py-0.5 font-(family-name:--font-mono) text-[0.85em] text-ink">
               good first issue

@@ -43,7 +43,7 @@ export function Footer() {
       </div>
 
       <p className="mt-14 font-(family-name:--font-mono) text-xs text-ink-faint">
-        Apache-2.0 · Not yet available. Nothing here is financial advice.
+        MIT · Not yet available. Nothing here is financial advice.
       </p>
     </footer>
   );
