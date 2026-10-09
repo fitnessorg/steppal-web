@@ -1,5 +1,7 @@
 # StepPal — web
 
+**Live at [steppal-web.vercel.app](https://steppal-web.vercel.app)**
+
 The site for [StepPal](https://github.com/fitnessorg), a commitment app where
 you put money behind a step goal and a contract holds it until you have either
 earned it back or lost it.
