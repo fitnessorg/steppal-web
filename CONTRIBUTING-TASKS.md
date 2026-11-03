@@ -15,12 +15,6 @@ Links to the site unfurl with no image. Add a generated OG image using Next's
 
 **Done when:** a shared link shows a StepPal card rather than a bare title.
 
-### A real 404
-**File:** `src/app/not-found.tsx` (new) · **Difficulty:** easy
-
-The default Next 404 does not look like this site at all. Give it the frame,
-the type scale, and a way back.
-
 ### Anchor links on the document pages
 **File:** `src/components/Prose.tsx` · **Difficulty:** easy
 

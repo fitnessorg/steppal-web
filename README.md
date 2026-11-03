@@ -23,7 +23,7 @@ against an in-memory store that logs to your terminal.
 
 ```bash
 npm run build       # production build
-npm test            # 15 tests
+npm test            # 17 tests
 npm run lint
 npm run typecheck
 ```
@@ -37,6 +37,7 @@ npm run typecheck
 | `/architecture` | Where the money sits and who may move it |
 | `/privacy` | What the app collects, and what it deliberately does not |
 | `/terms` | The deal, in plain words |
+| `/_not-found` | Branded recovery view with direct routes back |
 | `/api/waitlist` | `POST { email }` — validation, dedupe, honeypot, rate limit |
 
 ## The waitlist is real
