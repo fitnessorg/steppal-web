@@ -37,6 +37,7 @@ npm run typecheck
 | `/architecture` | Where the money sits and who may move it |
 | `/privacy` | What the app collects, and what it deliberately does not |
 | `/terms` | The deal, in plain words |
+| `/_not-found` | Branded recovery view with direct routes back |
 | `/api/waitlist` | `POST { email }` — validation, dedupe, honeypot, rate limit |
 
 ## The waitlist is real
