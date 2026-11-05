@@ -23,7 +23,7 @@ against an in-memory store that logs to your terminal.
 
 ```bash
 npm run build       # production build
-npm test            # 17 tests
+npm test            # 27 tests
 npm run lint
 npm run typecheck
 ```
@@ -98,6 +98,7 @@ and otherwise uses localhost.
 
 ## Contributing
 
-See [CONTRIBUTING-TASKS.md](./CONTRIBUTING-TASKS.md) and the `/contribute` page.
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for full developer setup, stack standards, and PR expectations.
+For open scoped tasks, see [CONTRIBUTING-TASKS.md](./CONTRIBUTING-TASKS.md) and the [`/contribute`](https://steppal-web.vercel.app/contribute) page.
 
 MIT. See [LICENSE](./LICENSE).

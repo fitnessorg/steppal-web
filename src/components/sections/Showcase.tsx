@@ -128,24 +128,44 @@ export function Showcase() {
         {/* Copy column */}
         <div className="order-2 md:order-1">
           <p className="t-label mb-8">Inside the app</p>
-          <div className="relative">
+          <div role="tablist" aria-label="App preview screens" className="relative flex flex-col gap-2">
             {SCREENS.map((s, i) => (
-              <div
+              <button
                 key={s.label}
-                className="transition-opacity duration-500"
+                type="button"
+                role="tab"
+                id={`showcase-tab-${i}`}
+                aria-selected={i === active}
+                aria-controls={`showcase-panel-${i}`}
+                onClick={() => setActive(i)}
+                onFocus={() => setActive(i)}
+                onKeyDown={(e) => {
+                  if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    setActive((i + 1) % SCREENS.length);
+                  } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    setActive((i - 1 + SCREENS.length) % SCREENS.length);
+                  }
+                }}
+                className="w-full text-left transition-opacity duration-300 rounded-lg p-1 -ml-1 focus-visible:outline-2 focus-visible:outline-flame cursor-pointer"
                 style={{
-                  opacity: i === active ? 1 : 0.18,
+                  opacity: i === active ? 1 : 0.45,
                 }}
               >
-                <div className="border-l-2 py-3 pl-6" style={{
-                  borderColor: i === active ? 'var(--color-accent)' : 'var(--color-surface-2)',
-                }}>
-                  <h3 className="font-(family-name:--font-display) text-2xl leading-tight tracking-tight">
+                <div
+                  className="border-l-2 py-3 pl-6 transition-colors duration-300"
+                  style={{
+                    borderColor: i === active ? 'var(--color-accent)' : 'var(--color-surface-2)',
+                  }}
+                >
+                  <span className="t-label block mb-1 text-ink-faint">{s.label}</span>
+                  <h3 className="font-(family-name:--font-display) text-2xl leading-tight tracking-tight text-ink">
                     {s.title}
                   </h3>
                   <p className="mt-2 max-w-[38ch] text-ink-soft">{s.body}</p>
                 </div>
-              </div>
+              </button>
             ))}
           </div>
         </div>
@@ -156,6 +176,10 @@ export function Showcase() {
             {SCREENS.map((s, i) => (
               <div
                 key={s.label}
+                id={`showcase-panel-${i}`}
+                role="tabpanel"
+                aria-labelledby={`showcase-tab-${i}`}
+                aria-hidden={i !== active}
                 className="absolute inset-0 transition-all duration-500 ease-out"
                 style={{
                   opacity: i === active ? 1 : 0,
