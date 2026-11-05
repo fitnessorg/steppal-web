@@ -7,13 +7,7 @@ page — this repo is small on purpose.
 
 ## Good first issues
 
-### Open Graph images
-**File:** `src/app/opengraph-image.tsx` (new) · **Difficulty:** easy
-
-Links to the site unfurl with no image. Add a generated OG image using Next's
-`ImageResponse`, and a per-page one for `/architecture` and `/contribute`.
-
-**Done when:** a shared link shows a StepPal card rather than a bare title.
+*(All current initial Good First Issues have been completed! Check the scoped Features or codebase `TODO(contributor)` comments for next opportunities.)*
 
 ---
 
@@ -77,4 +71,6 @@ listener) and the waitlist form's state machine.
 - **Custom branded 404 page** (`src/app/not-found.tsx`): On-brand recovery view with typography tokens, frame borders, and direct recovery paths.
 - **Anchor links on document pages** (`src/components/Prose.tsx`): Auto-slugging heading IDs and hover/focus permalink anchors (`#`) across `/architecture`, `/contribute`, `/privacy`, and `/terms`.
 - **Keyboard focus audit**: Accessible tablist navigation and keyboard controls in `Showcase.tsx`, high-contrast `:focus-visible` using `var(--color-flame)` that preserves element curvature, and frame-offset skip links.
+- **Dynamic Open Graph & social card generation** (`src/app/opengraph-image.tsx`, `src/app/architecture/opengraph-image.tsx`, `src/app/contribute/opengraph-image.tsx`): Built with Next.js `ImageResponse` using signature flame frames, brand tokens, and route-specific metadata badges.
+
 

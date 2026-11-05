@@ -23,7 +23,7 @@ against an in-memory store that logs to your terminal.
 
 ```bash
 npm run build       # production build
-npm test            # 27 tests
+npm test            # 35 tests
 npm run lint
 npm run typecheck
 ```
@@ -38,6 +38,9 @@ npm run typecheck
 | `/privacy` | What the app collects, and what it deliberately does not |
 | `/terms` | The deal, in plain words |
 | `/_not-found` | Branded recovery view with direct routes back |
+| `/opengraph-image` | Dynamic root social share card (`ImageResponse`) |
+| `/architecture/opengraph-image` | Dedicated architecture card with protocol badges |
+| `/contribute/opengraph-image` | Contributor onboarding card with good first issues badges |
 | `/api/waitlist` | `POST { email }` — validation, dedupe, honeypot, rate limit |
 
 ## The waitlist is real
