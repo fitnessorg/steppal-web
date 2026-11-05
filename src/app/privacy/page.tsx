@@ -4,6 +4,20 @@ import { Prose } from '@/components/Prose';
 export const metadata: Metadata = {
   title: 'Privacy — StepPal',
   description: 'What StepPal collects, what it does not, and why.',
+  alternates: {
+    canonical: '/privacy',
+  },
+  openGraph: {
+    title: 'Privacy — StepPal',
+    description: 'What StepPal collects, what it does not, and why.',
+    url: '/privacy',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Privacy — StepPal',
+    description: 'What StepPal collects, what it does not, and why.',
+  },
 };
 
 export default function Privacy() {

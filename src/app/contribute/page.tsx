@@ -5,6 +5,22 @@ export const metadata: Metadata = {
   title: 'Contribute — StepPal',
   description:
     'How to pick up work on StepPal: three repos, what runs without a server, and where the open tasks are.',
+  alternates: {
+    canonical: '/contribute',
+  },
+  openGraph: {
+    title: 'Contribute — StepPal',
+    description:
+      'Three repos, and none of them need the others to run. Scoped contributor tasks, mock servers, and good first issues.',
+    url: '/contribute',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Contribute — StepPal',
+    description:
+      'Three repos, and none of them need the others to run. Scoped contributor tasks, mock servers, and good first issues.',
+  },
 };
 
 const REPOS = [

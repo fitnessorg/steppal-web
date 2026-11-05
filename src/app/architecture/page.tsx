@@ -5,6 +5,22 @@ export const metadata: Metadata = {
   title: 'Architecture — StepPal',
   description:
     'How StepPal is built: three repos, where the money is held, how step counts are validated, and why settlement works the way it does.',
+  alternates: {
+    canonical: '/architecture',
+  },
+  openGraph: {
+    title: 'Architecture — StepPal',
+    description:
+      'Where the money sits, and who is allowed to move it. Escrow, validation rules, and settlement on Stellar.',
+    url: '/architecture',
+    type: 'article',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Architecture — StepPal',
+    description:
+      'Where the money sits, and who is allowed to move it. Escrow, validation rules, and settlement on Stellar.',
+  },
 };
 
 const CONTRACT = 'CCEMDKD4POJ4H2EF3JSY73W33OVB34X7KWV7UM6VRESTPNTHJ4OG37TT';
