@@ -15,19 +15,6 @@ Links to the site unfurl with no image. Add a generated OG image using Next's
 
 **Done when:** a shared link shows a StepPal card rather than a bare title.
 
-### Anchor links on the document pages
-**File:** `src/components/Prose.tsx` · **Difficulty:** easy
-
-`/architecture` is long and nothing in it is linkable. Give the headings ids
-and a hover anchor, so a contributor can point at a specific section.
-
-### Keyboard focus audit
-**Difficulty:** easy
-
-There is a skip link and a global focus ring. Tab through every page and find
-what is still unreachable or invisible — the theme toggle, the magnetic button
-and the pinned showcase are the likely suspects.
-
 ---
 
 ## Features
@@ -82,3 +69,12 @@ to scroll-animate. Move it to the landing page, or make it a route group.
 The 15 existing tests cover `src/lib` only. The parts most likely to break
 silently are the theme toggle's store (it has a server snapshot and a storage
 listener) and the waitlist form's state machine.
+
+---
+
+## Completed
+
+- **Custom branded 404 page** (`src/app/not-found.tsx`): On-brand recovery view with typography tokens, frame borders, and direct recovery paths.
+- **Anchor links on document pages** (`src/components/Prose.tsx`): Auto-slugging heading IDs and hover/focus permalink anchors (`#`) across `/architecture`, `/contribute`, `/privacy`, and `/terms`.
+- **Keyboard focus audit**: Accessible tablist navigation and keyboard controls in `Showcase.tsx`, high-contrast `:focus-visible` using `var(--color-flame)` that preserves element curvature, and frame-offset skip links.
+
