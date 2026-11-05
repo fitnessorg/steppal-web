@@ -4,6 +4,20 @@ import { Prose } from '@/components/Prose';
 export const metadata: Metadata = {
   title: 'Terms — StepPal',
   description: 'The terms that will apply to StepPal, written plainly.',
+  alternates: {
+    canonical: '/terms',
+  },
+  openGraph: {
+    title: 'Terms — StepPal',
+    description: 'The terms that will apply to StepPal, written plainly.',
+    url: '/terms',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Terms — StepPal',
+    description: 'The terms that will apply to StepPal, written plainly.',
+  },
 };
 
 export default function Terms() {

@@ -25,6 +25,9 @@ export const metadata: Metadata = {
   title: 'StepPal — put money on your step goal',
   description:
     'Form a group with your friends, everyone stakes money, and at the end of the week it settles based on who actually walked. Open source, held in a smart contract.',
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
     title: 'StepPal — put money on your step goal',
     description:
