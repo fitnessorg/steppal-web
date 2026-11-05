@@ -98,7 +98,7 @@ export function Waitlist() {
             aria-invalid={state.kind === 'error'}
             aria-describedby={state.kind === 'error' ? 'waitlist-error' : undefined}
             placeholder="you@example.com"
-            className="min-w-0 flex-1 rounded-full border border-surface-2 bg-surface px-6 py-4 text-ink placeholder:text-ink-faint focus:border-accent focus:outline-none"
+            className="min-w-0 flex-1 rounded-full border border-surface-2 bg-surface px-6 py-4 text-ink placeholder:text-ink-faint focus:border-flame focus-visible:outline-2 focus-visible:outline-flame"
           />
 
           {/*
