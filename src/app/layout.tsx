@@ -73,6 +73,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Skip to content
         </a>
         <div className="frame" aria-hidden />
+        {/*
+          Global navigation header. Sits in the root shell so all routes share
+          consistent navigation, while page-specific motion and tickers remain
+          decoupled from reading documents.
+        */}
         <Header />
         {children}
       </body>
