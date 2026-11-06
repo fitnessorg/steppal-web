@@ -16,7 +16,7 @@ describe('/api/waitlist Route Handler', () => {
   it('accepts and records a valid waitlist submission', async () => {
     const mockStore: WaitlistStore = {
       name: 'mock',
-      add: vi.fn(async () => 'added'),
+      add: vi.fn(async (): Promise<'added' | 'already_on_list'> => 'added'),
     };
     setWaitlistStore(mockStore);
 
@@ -40,7 +40,7 @@ describe('/api/waitlist Route Handler', () => {
   it('returns already_on_list status when email is already registered', async () => {
     const mockStore: WaitlistStore = {
       name: 'mock',
-      add: vi.fn(async () => 'already_on_list'),
+      add: vi.fn(async (): Promise<'added' | 'already_on_list'> => 'already_on_list'),
     };
     setWaitlistStore(mockStore);
 
@@ -63,7 +63,7 @@ describe('/api/waitlist Route Handler', () => {
   it('catches honeypot submission and reports success without persisting', async () => {
     const mockStore: WaitlistStore = {
       name: 'mock',
-      add: vi.fn(async () => 'added'),
+      add: vi.fn(async (): Promise<'added' | 'already_on_list'> => 'added'),
     };
     setWaitlistStore(mockStore);
 
