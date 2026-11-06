@@ -1,3 +1,4 @@
+import '@fontsource-variable/unbounded';
 import { SmoothScroll } from '@/components/SmoothScroll';
 import { Hero } from '@/components/sections/Hero';
 import { Hook } from '@/components/sections/Hook';
