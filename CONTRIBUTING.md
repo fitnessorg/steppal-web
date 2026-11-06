@@ -23,7 +23,7 @@ None of the three repositories require each other to build or run locally.
 ## Core Philosophy
 
 - **Zero accounts or external services required:** You do not need API keys, database credentials, or third-party accounts to build, develop, or test this site.
-- **Functional defaults:** The waitlist operates out of the box with an in-memory store that logs submissions directly to stdout.
+- **Functional defaults:** The waitlist operates out of the box with an in-memory store that logs submissions directly to stdout. Optional durable backends (`steppal-core` Postgres or Resend) are activated seamlessly via environment variables.
 - **Rock-solid reliability:** Every commit must pass typechecks, linting, unit tests, and production static builds.
 - **Accessible & readable:** Reading pages (`/architecture`, `/contribute`, `/privacy`, `/terms`) are built for reading with standard measure and zero distracting animations.
 

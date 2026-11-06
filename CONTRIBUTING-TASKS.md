@@ -13,24 +13,6 @@ page — this repo is small on purpose.
 
 ## Features
 
-### Durable waitlist storage
-**File:** `src/lib/waitlist.ts` · **Difficulty:** medium
-
-The memory store loses signups on redeploy and the Resend path is untested
-against the live API. Add a third store that posts to steppal-core, so signups
-land in the same Postgres as everything else, and pick it up from an env var
-like the others.
-
-**Done when:** signups survive a redeploy, and the memory store is still the
-default so the repo runs with no configuration.
-
-### Double-submit protection on the client
-**File:** `src/components/sections/Waitlist.tsx` · **Difficulty:** easy
-
-The button disables while sending, but a fast double-tap on a slow connection
-can still fire twice. The server dedupes, so this is cosmetic — but the second
-request burns a rate-limit slot.
-
 ### A changelog page
 **Difficulty:** medium
 
@@ -58,5 +40,7 @@ The interactive components most likely to break silently are the theme toggle's 
 - **Dynamic Open Graph & social card generation** (`src/app/opengraph-image.tsx`, `src/app/architecture/opengraph-image.tsx`, `src/app/contribute/opengraph-image.tsx`): Built with Next.js `ImageResponse` using signature flame frames, brand tokens, and route-specific metadata badges.
 - **Split motion out of document pages** (`src/app/layout.tsx`, `src/app/page.tsx`): Decoupled `SmoothScroll` (Lenis + GSAP RAF loop) from the root shell, mounting it only on the landing page while prose document routes run pure native scrolling.
 - **Lighthouse & asset optimization pass**: Compressed hero mark from 218KB to 87KB (~60% reduction), scoped display font (`Unbounded`) strictly to interactive routes, and configured modern AVIF/WebP image formats in `next.config.ts`.
+- **Durable steppal-core waitlist storage** (`src/lib/waitlist.ts`): Pluggable backend store posting to `steppal-core` with HTTP 409 Conflict deduplication, surviving redeploys while keeping in-memory default for 0-config clones.
+- **Double-submit client protection** (`src/components/sections/Waitlist.tsx`): Synchronous submission lock and disabled state machine preventing rapid double-taps on slow mobile networks from consuming rate-limit slots.
 
 
