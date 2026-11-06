@@ -87,6 +87,51 @@ export function createResendStore(apiKey: string, audienceId: string): WaitlistS
   };
 }
 
+/**
+ * steppal-core store. Posts directly to the backend API so signups land in the
+ * same Postgres database as everything else in the ecosystem.
+ *
+ * Handles HTTP 409 Conflict or `{ status: 'already_on_list' }` as deduplicated
+ * idempotency, surviving redeployments.
+ */
+export function createCoreStore(apiUrl: string, apiKey?: string): WaitlistStore {
+  const normalizedUrl = apiUrl.replace(/\/+$/, '');
+  const endpoint = `${normalizedUrl}/api/waitlist`;
+
+  return {
+    name: 'steppal-core',
+    async add(email) {
+      const headers: Record<string, string> = {
+        'content-type': 'application/json',
+      };
+      if (apiKey) {
+        headers['authorization'] = `Bearer ${apiKey}`;
+      }
+
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ email }),
+      });
+
+      if (res.status === 409) {
+        return 'already_on_list';
+      }
+
+      if (!res.ok) {
+        throw new Error(`steppal-core responded ${res.status}`);
+      }
+
+      const body = (await res.json().catch(() => ({}))) as { status?: string };
+      if (body.status === 'already_on_list') {
+        return 'already_on_list';
+      }
+
+      return 'added';
+    },
+  };
+}
+
 let cached: WaitlistStore | null = null;
 
 export function waitlistStore(): WaitlistStore {
