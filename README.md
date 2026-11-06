@@ -23,7 +23,7 @@ against an in-memory store that logs to your terminal.
 
 ```bash
 npm run build       # production build
-npm test            # 51 tests
+npm test            # 68 tests
 npm run lint
 npm run typecheck
 ```
@@ -48,12 +48,18 @@ npm run typecheck
 `src/lib/waitlist.ts` holds validation and a pluggable store, kept out of the
 route handler so both can be tested without a request.
 
+- **steppal-core store when configured.** Set `STEPPAL_CORE_URL` (and optional
+  `STEPPAL_CORE_API_KEY`) and signups post to the backend Fastify API to land in
+  the same Postgres database as the rest of the ecosystem. Idempotently deduplicates
+  on HTTP 409 Conflict.
 - **Memory store by default.** Logs to stdout and dedupes for the life of the
   process. This is what makes the form genuinely work from a fresh clone — a
   contributor can submit it, see the success state, and watch the address land
   in the terminal. It is not durable and says so.
 - **Resend when configured.** Set `RESEND_API_KEY` and `RESEND_AUDIENCE_ID` and
   signups go to a Resend audience. One `fetch`, no SDK.
+- **Synchronous double-submit protection.** Client-side submission locks synchronously
+  on tap to eliminate race conditions on slow mobile networks from burning rate-limit slots.
 - **A honeypot field** named `company`, hidden from people and from screen
   readers. A filled honeypot gets the same answer a real signup does, because
   telling a bot it was caught only teaches whoever wrote it.
