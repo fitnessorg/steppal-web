@@ -280,7 +280,8 @@ body {
   .prose-body h2 {
     margin-top: 3.5rem;
     margin-bottom: 1rem;
-    font-family: var(--font-display), system-ui, sans-serif;
+    font-family: var(--font-body), system-ui, sans-serif;
+    font-weight: 700;
     font-size: 1.5rem;
     letter-spacing: -0.02em;
     color: var(--color-ink);
