@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from 'next';
-import { SmoothScroll } from '@/components/SmoothScroll';
 import { Header } from '@/components/Header';
 import { siteUrl } from '@/lib/site';
 
@@ -74,10 +73,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Skip to content
         </a>
         <div className="frame" aria-hidden />
-        <SmoothScroll>
-          <Header />
-          {children}
-        </SmoothScroll>
+        <Header />
+        {children}
       </body>
     </html>
   );

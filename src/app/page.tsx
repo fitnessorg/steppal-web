@@ -1,3 +1,4 @@
+import { SmoothScroll } from '@/components/SmoothScroll';
 import { Hero } from '@/components/sections/Hero';
 import { Hook } from '@/components/sections/Hook';
 import { HowItWorks } from '@/components/sections/HowItWorks';
@@ -10,16 +11,18 @@ import { Footer } from '@/components/sections/Footer';
 
 export default function Home() {
   return (
-    <main id="main">
-      <Hero />
-      <Hook />
-      <HowItWorks />
-      <Modes />
-      <Showcase />
-      <Trust />
-      <OpenSource />
-      <Waitlist />
-      <Footer />
-    </main>
+    <SmoothScroll>
+      <main id="main">
+        <Hero />
+        <Hook />
+        <HowItWorks />
+        <Modes />
+        <Showcase />
+        <Trust />
+        <OpenSource />
+        <Waitlist />
+        <Footer />
+      </main>
+    </SmoothScroll>
   );
 }
