@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { RevealText } from '@/components/RevealText';
 import { isPlausibleEmail } from '@/lib/waitlist';
 
@@ -22,9 +22,16 @@ export function Waitlist() {
   const [email, setEmail] = useState('');
   const [company, setCompany] = useState('');
   const [state, setState] = useState<State>({ kind: 'idle' });
+  const submittingRef = useRef(false);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Synchronous submission lock to eliminate double-submits from rapid taps
+    // before React re-renders the disabled button.
+    if (submittingRef.current || state.kind === 'sending') {
+      return;
+    }
 
     // Validated here as well as on the server, with the same function, so a
     // typo never costs a round trip.
@@ -32,6 +39,7 @@ export function Waitlist() {
       return setState({ kind: 'error', message: 'That does not look like an email address.' });
     }
 
+    submittingRef.current = true;
     setState({ kind: 'sending' });
 
     try {
@@ -56,6 +64,8 @@ export function Waitlist() {
       setState({ kind: 'done', already: body.status === 'already_on_list' });
     } catch {
       setState({ kind: 'error', message: 'Could not reach the server. Check your connection.' });
+    } finally {
+      submittingRef.current = false;
     }
   };
 
