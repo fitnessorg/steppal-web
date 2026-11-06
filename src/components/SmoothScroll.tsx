@@ -13,6 +13,10 @@ gsap.registerPlugin(ScrollTrigger);
  * RAF loop. Two independent loops is the usual cause of jittery scroll-linked
  * animation.
  *
+ * Scoped strictly to interactive/motion routes (the landing page). Prose and
+ * document pages (/architecture, /contribute, /privacy, /terms) intentionally
+ * do not mount this component to avoid scroll hijack and heavy RAF listeners.
+ *
  * Disabled entirely under prefers-reduced-motion — native scrolling only.
  */
 export function SmoothScroll({ children }: { children: React.ReactNode }) {

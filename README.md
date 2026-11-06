@@ -23,7 +23,7 @@ against an in-memory store that logs to your terminal.
 
 ```bash
 npm run build       # production build
-npm test            # 35 tests
+npm test            # 51 tests
 npm run lint
 npm run typecheck
 ```
@@ -80,6 +80,18 @@ of jittery scroll-linked animation.
 all, reveals become opacity-only, the counter renders its final value, and the
 magnetic button stops tracking. The document pages have no motion by design —
 a page that animates while you are trying to read it fights you.
+
+## Performance & Bundle Decoupling
+
+- **Route-isolated motion:** `SmoothScroll` and its GSAP ticker are mounted strictly
+  on the landing page (`/`). Document routes (`/architecture`, `/contribute`,
+  `/privacy`, `/terms`) mount zero scroll listeners and execute native scrolling.
+- **Font budget hygiene:** `@fontsource-variable/unbounded` (display font) loads only
+  on the interactive landing page. Prose routes load only the two necessary fonts
+  (`Instrument Sans` and `JetBrains Mono`), falling back cleanly to system display.
+- **Asset compression:** The hero brand mark was quantized and compressed from
+  218KB to 87KB (~60% reduction). Next.js image configuration is tuned for modern
+  AVIF and WebP delivery with immutable caching.
 
 ## Two things that will bite you
 

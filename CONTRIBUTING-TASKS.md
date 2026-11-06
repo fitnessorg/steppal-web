@@ -41,28 +41,12 @@ GitHub releases API at build time and render them.
 
 ## Performance and quality
 
-### Lighthouse pass
-**Difficulty:** medium
-
-Never measured. Likely suspects: the hero PNG is 218KB and unoptimised, three
-variable font families load on every page including the document pages that
-only need two, and GSAP plus Lenis are in the bundle of pages with no motion.
-
-**Done when:** there is a recorded baseline and at least the font and image
-wins are taken.
-
-### Split motion out of the document pages
-**File:** `src/app/layout.tsx` · **Difficulty:** medium
-
-`SmoothScroll` mounts on every route, including `/privacy`, which has nothing
-to scroll-animate. Move it to the landing page, or make it a route group.
-
 ### Tests for the components
 **Difficulty:** medium
 
-The 15 existing tests cover `src/lib` only. The parts most likely to break
-silently are the theme toggle's store (it has a server snapshot and a storage
-listener) and the waitlist form's state machine.
+The existing tests cover `src/lib`, performance isolation, and SEO/OG generators.
+The interactive components most likely to break silently are the theme toggle's store
+(it has a server snapshot and a storage listener) and the waitlist form's state machine.
 
 ---
 
@@ -72,5 +56,7 @@ listener) and the waitlist form's state machine.
 - **Anchor links on document pages** (`src/components/Prose.tsx`): Auto-slugging heading IDs and hover/focus permalink anchors (`#`) across `/architecture`, `/contribute`, `/privacy`, and `/terms`.
 - **Keyboard focus audit**: Accessible tablist navigation and keyboard controls in `Showcase.tsx`, high-contrast `:focus-visible` using `var(--color-flame)` that preserves element curvature, and frame-offset skip links.
 - **Dynamic Open Graph & social card generation** (`src/app/opengraph-image.tsx`, `src/app/architecture/opengraph-image.tsx`, `src/app/contribute/opengraph-image.tsx`): Built with Next.js `ImageResponse` using signature flame frames, brand tokens, and route-specific metadata badges.
+- **Split motion out of document pages** (`src/app/layout.tsx`, `src/app/page.tsx`): Decoupled `SmoothScroll` (Lenis + GSAP RAF loop) from the root shell, mounting it only on the landing page while prose document routes run pure native scrolling.
+- **Lighthouse & asset optimization pass**: Compressed hero mark from 218KB to 87KB (~60% reduction), scoped display font (`Unbounded`) strictly to interactive routes, and configured modern AVIF/WebP image formats in `next.config.ts`.
 
 

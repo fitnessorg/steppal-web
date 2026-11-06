@@ -1,18 +1,17 @@
 import type { Metadata, Viewport } from 'next';
-import { SmoothScroll } from '@/components/SmoothScroll';
 import { Header } from '@/components/Header';
 import { siteUrl } from '@/lib/site';
 
 /*
   Fonts ship from npm rather than next/font/google: the woff2 files are in the
-  lockfile, so builds need no network and are reproducible. Variable weights,
-  so all three families cost three files total.
+  lockfile, so builds need no network and are reproducible. Variable weights.
 
-  Unbounded  — display. Geometric, high-personality, holds up at 15vw.
-  Instrument — body. Clean and warm without being Inter.
-  JetBrains  — data. Step counts, naira figures, labels.
+  Instrument — body. Clean and warm without being Inter. Used on all pages.
+  JetBrains  — data. Step counts, naira figures, labels, and code spans.
+
+  Unbounded (display font) is loaded on the interactive landing page route
+  rather than globally here, so document/prose routes load only two font files.
 */
-import '@fontsource-variable/unbounded';
 import '@fontsource-variable/instrument-sans';
 import '@fontsource-variable/jetbrains-mono';
 
@@ -74,10 +73,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Skip to content
         </a>
         <div className="frame" aria-hidden />
-        <SmoothScroll>
-          <Header />
-          {children}
-        </SmoothScroll>
+        {/*
+          Global navigation header. Sits in the root shell so all routes share
+          consistent navigation, while page-specific motion and tickers remain
+          decoupled from reading documents.
+        */}
+        <Header />
+        {children}
       </body>
     </html>
   );
