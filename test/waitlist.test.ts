@@ -1,10 +1,14 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import {
   isPlausibleEmail,
   normaliseEmail,
   rateLimit,
   resetRateLimits,
   submit,
+  createCoreStore,
+  createMemoryStore,
+  waitlistStore,
+  setWaitlistStore,
   type WaitlistStore,
 } from '@/lib/waitlist';
 
@@ -134,5 +138,123 @@ describe('rateLimit', () => {
 
     expect(rateLimit('1.2.3.4', start)).toBe(false);
     expect(rateLimit('1.2.3.4', start + 61 * 60 * 1000)).toBe(true);
+  });
+});
+
+describe('createCoreStore', () => {
+  const originalFetch = globalThis.fetch;
+
+  afterEach(() => {
+    globalThis.fetch = originalFetch;
+  });
+
+  it('posts email to steppal-core endpoint with correct headers and returns added', async () => {
+    let capturedUrl = '';
+    let capturedBody = '';
+    let capturedHeaders: Record<string, string> = {};
+
+    globalThis.fetch = vi.fn().mockImplementation(async (url: string, init?: RequestInit) => {
+      capturedUrl = url;
+      capturedBody = init?.body as string;
+      capturedHeaders = init?.headers as Record<string, string>;
+      return new Response(JSON.stringify({ status: 'added' }), {
+        status: 201,
+        headers: { 'content-type': 'application/json' },
+      });
+    });
+
+    const store = createCoreStore('https://api.steppal.example', 'secret-key');
+    expect(store.name).toBe('steppal-core');
+
+    const result = await store.add('runner@example.com');
+    expect(result).toBe('added');
+    expect(capturedUrl).toBe('https://api.steppal.example/api/waitlist');
+    expect(capturedHeaders['authorization']).toBe('Bearer secret-key');
+    expect(JSON.parse(capturedBody)).toEqual({ email: 'runner@example.com' });
+  });
+
+  it('returns already_on_list when steppal-core responds with 409 Conflict', async () => {
+    globalThis.fetch = vi.fn().mockImplementation(async () => {
+      return new Response(JSON.stringify({ error: 'already_registered' }), {
+        status: 409,
+      });
+    });
+
+    const store = createCoreStore('https://api.steppal.example/');
+    const result = await store.add('existing@example.com');
+    expect(result).toBe('already_on_list');
+  });
+
+  it('returns already_on_list when steppal-core JSON specifies already_on_list status', async () => {
+    globalThis.fetch = vi.fn().mockImplementation(async () => {
+      return new Response(JSON.stringify({ status: 'already_on_list' }), {
+        status: 200,
+        headers: { 'content-type': 'application/json' },
+      });
+    });
+
+    const store = createCoreStore('https://api.steppal.example');
+    const result = await store.add('existing@example.com');
+    expect(result).toBe('already_on_list');
+  });
+
+  it('throws descriptive error on server error status', async () => {
+    globalThis.fetch = vi.fn().mockImplementation(async () => {
+      return new Response('Database connection refused', { status: 500 });
+    });
+
+    const store = createCoreStore('https://api.steppal.example');
+    await expect(store.add('fail@example.com')).rejects.toThrow('steppal-core responded 500');
+  });
+});
+
+describe('waitlistStore store resolution hierarchy', () => {
+  const originalEnv = { ...process.env };
+
+  beforeEach(() => {
+    setWaitlistStore(null);
+  });
+
+  afterEach(() => {
+    process.env = { ...originalEnv };
+    setWaitlistStore(null);
+  });
+
+  it('prioritizes steppal-core store when STEPPAL_CORE_URL is set', () => {
+    process.env.STEPPAL_CORE_URL = 'https://core.steppal.example';
+    process.env.RESEND_API_KEY = 're_123';
+    process.env.RESEND_AUDIENCE_ID = 'aud_456';
+
+    const store = waitlistStore();
+    expect(store.name).toBe('steppal-core');
+  });
+
+  it('falls back to Resend store when Resend credentials are set without core URL', () => {
+    delete process.env.STEPPAL_CORE_URL;
+    process.env.RESEND_API_KEY = 're_123';
+    process.env.RESEND_AUDIENCE_ID = 'aud_456';
+
+    const store = waitlistStore();
+    expect(store.name).toBe('resend');
+  });
+
+  it('defaults to in-memory store for 0-config fresh clones', () => {
+    delete process.env.STEPPAL_CORE_URL;
+    delete process.env.RESEND_API_KEY;
+    delete process.env.RESEND_AUDIENCE_ID;
+
+    const store = waitlistStore();
+    expect(store.name).toBe('memory');
+  });
+});
+
+describe('createMemoryStore', () => {
+  it('deduplicates signups in-memory', async () => {
+    const store = createMemoryStore();
+    expect(store.name).toBe('memory');
+
+    expect(await store.add('test@example.com')).toBe('added');
+    expect(await store.add('test@example.com')).toBe('already_on_list');
+    expect(await store.add('another@example.com')).toBe('added');
   });
 });
