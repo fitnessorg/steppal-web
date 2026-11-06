@@ -137,10 +137,21 @@ let cached: WaitlistStore | null = null;
 export function waitlistStore(): WaitlistStore {
   if (cached) return cached;
 
+  const coreUrl = process.env.STEPPAL_CORE_URL;
+  const coreKey = process.env.STEPPAL_CORE_API_KEY;
+  if (coreUrl) {
+    cached = createCoreStore(coreUrl, coreKey);
+    return cached;
+  }
+
   const key = process.env.RESEND_API_KEY;
   const audience = process.env.RESEND_AUDIENCE_ID;
+  if (key && audience) {
+    cached = createResendStore(key, audience);
+    return cached;
+  }
 
-  cached = key && audience ? createResendStore(key, audience) : createMemoryStore();
+  cached = createMemoryStore();
   return cached;
 }
 
