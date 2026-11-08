@@ -14,6 +14,7 @@ const LINKS = [
   ['Modes', '/#modes'],
   ['Open source', '/#contribute'],
   ['Contribute', '/contribute'],
+  ['Changelog', '/changelog'],
 ];
 
 /**

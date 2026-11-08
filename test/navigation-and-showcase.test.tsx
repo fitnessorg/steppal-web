@@ -16,6 +16,7 @@ describe('Header, Footer & Showcase Component Suite', () => {
       expect(html).toContain('href="/#modes"');
       expect(html).toContain('href="/#contribute"');
       expect(html).toContain('href="/contribute"');
+      expect(html).toContain('href="/changelog"');
       expect(html).toContain('href="/#waitlist"');
       expect(html).toContain('Get it');
       expect(html).toContain('Theme: Auto');
@@ -30,6 +31,7 @@ describe('Header, Footer & Showcase Component Suite', () => {
       expect(html).toContain('href="https://github.com/fitnessorg"');
       expect(html).toContain('href="/contribute"');
       expect(html).toContain('href="/architecture"');
+      expect(html).toContain('href="/changelog"');
       expect(html).toContain('href="/privacy"');
       expect(html).toContain('href="/terms"');
       expect(html).toContain('MIT');
