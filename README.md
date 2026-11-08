@@ -23,7 +23,7 @@ against an in-memory store that logs to your terminal.
 
 ```bash
 npm run build       # production build
-npm test            # 68 tests
+npm test            # 87 tests
 npm run lint
 npm run typecheck
 ```

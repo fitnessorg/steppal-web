@@ -23,12 +23,7 @@ GitHub releases API at build time and render them.
 
 ## Performance and quality
 
-### Tests for the components
-**Difficulty:** medium
-
-The existing tests cover `src/lib`, performance isolation, and SEO/OG generators.
-The interactive components most likely to break silently are the theme toggle's store
-(it has a server snapshot and a storage listener) and the waitlist form's state machine.
+*(All initial Performance and Quality tasks have been completed!)*
 
 ---
 
@@ -42,5 +37,6 @@ The interactive components most likely to break silently are the theme toggle's 
 - **Lighthouse & asset optimization pass**: Compressed hero mark from 218KB to 87KB (~60% reduction), scoped display font (`Unbounded`) strictly to interactive routes, and configured modern AVIF/WebP image formats in `next.config.ts`.
 - **Durable steppal-core waitlist storage** (`src/lib/waitlist.ts`): Pluggable backend store posting to `steppal-core` with HTTP 409 Conflict deduplication, surviving redeploys while keeping in-memory default for 0-config clones.
 - **Double-submit client protection** (`src/components/sections/Waitlist.tsx`): Synchronous submission lock and disabled state machine preventing rapid double-taps on slow mobile networks from consuming rate-limit slots.
+- **Component & state machine test suite** (`test/theme-toggle.test.tsx`, `test/waitlist-component.test.tsx`, `test/navigation-and-showcase.test.tsx`): Full test coverage of the theme toggle's external store, server snapshots, storage listeners, waitlist form state transitions, and navigation landmarks.
 
 
