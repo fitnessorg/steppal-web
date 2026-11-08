@@ -23,7 +23,7 @@ against an in-memory store that logs to your terminal.
 
 ```bash
 npm run build       # production build
-npm test            # 98 tests
+npm test            # 99 tests
 npm run lint
 npm run typecheck
 ```
@@ -93,7 +93,7 @@ a page that animates while you are trying to read it fights you.
 
 - **Route-isolated motion:** `SmoothScroll` and its GSAP ticker are mounted strictly
   on the landing page (`/`). Document routes (`/architecture`, `/contribute`,
-  `/privacy`, `/terms`) mount zero scroll listeners and execute native scrolling.
+  `/changelog`, `/privacy`, `/terms`) mount zero scroll listeners and execute native scrolling.
 - **Font budget hygiene:** `@fontsource-variable/unbounded` (display font) loads only
   on the interactive landing page. Prose routes load only the two necessary fonts
   (`Instrument Sans` and `JetBrains Mono`), falling back cleanly to system display.
