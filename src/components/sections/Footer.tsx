@@ -33,6 +33,9 @@ export function Footer() {
             <Link href="/architecture" className="text-ink-soft hover:text-ink">
               Architecture
             </Link>
+            <Link href="/changelog" className="text-ink-soft hover:text-ink">
+              Changelog
+            </Link>
           </div>
           <div className="flex flex-col gap-3">
             <span className="t-label">Legal</span>

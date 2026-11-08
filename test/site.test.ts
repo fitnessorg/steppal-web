@@ -1,5 +1,6 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { siteUrl } from '@/lib/site';
+import sitemap from '@/app/sitemap';
 
 const saved = { ...process.env };
 
@@ -27,5 +28,18 @@ describe('siteUrl', () => {
     delete process.env.VERCEL_PROJECT_PRODUCTION_URL;
 
     expect(siteUrl()).toBe('http://localhost:3000');
+  });
+
+  it('includes /changelog alongside core routes in the generated sitemap', () => {
+    process.env.NEXT_PUBLIC_SITE_URL = 'https://steppal.ng';
+    const entries = sitemap();
+    const urls = entries.map((entry) => entry.url);
+
+    expect(urls).toContain('https://steppal.ng');
+    expect(urls).toContain('https://steppal.ng/contribute');
+    expect(urls).toContain('https://steppal.ng/architecture');
+    expect(urls).toContain('https://steppal.ng/changelog');
+    expect(urls).toContain('https://steppal.ng/privacy');
+    expect(urls).toContain('https://steppal.ng/terms');
   });
 });
