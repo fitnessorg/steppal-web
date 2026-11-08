@@ -13,11 +13,7 @@ page — this repo is small on purpose.
 
 ## Features
 
-### A changelog page
-**Difficulty:** medium
-
-Three repos are moving and there is nowhere that says what shipped. Read the
-GitHub releases API at build time and render them.
+*(All initial Feature tasks have been completed!)*
 
 ---
 
@@ -38,5 +34,6 @@ GitHub releases API at build time and render them.
 - **Durable steppal-core waitlist storage** (`src/lib/waitlist.ts`): Pluggable backend store posting to `steppal-core` with HTTP 409 Conflict deduplication, surviving redeploys while keeping in-memory default for 0-config clones.
 - **Double-submit client protection** (`src/components/sections/Waitlist.tsx`): Synchronous submission lock and disabled state machine preventing rapid double-taps on slow mobile networks from consuming rate-limit slots.
 - **Component & state machine test suite** (`test/theme-toggle.test.tsx`, `test/waitlist-component.test.tsx`, `test/navigation-and-showcase.test.tsx`): Full test coverage of the theme toggle's external store, server snapshots, storage listeners, waitlist form state transitions, and navigation landmarks.
+- **Ecosystem changelog hub** (`src/app/changelog/page.tsx`, `src/lib/changelog.ts`, `src/app/changelog/opengraph-image.tsx`): Chronological milestone log across `steppal-core`, `steppal-mobile`, and `steppal-web` with GitHub Releases API parsing and zero-credential offline fallback snapshots.
 
 
