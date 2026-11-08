@@ -38,5 +38,13 @@ describe('Asset & Performance Configuration', () => {
       const sitemapPath = path.join(process.cwd(), 'src', 'app', 'sitemap.ts');
       expect(fs.existsSync(sitemapPath)).toBe(true);
     });
+
+    it('keeps public/ free of unused create-next-app boilerplate SVGs', () => {
+      const boilerplateFiles = ['file.svg', 'globe.svg', 'next.svg', 'vercel.svg', 'window.svg'];
+      for (const file of boilerplateFiles) {
+        const filePath = path.join(process.cwd(), 'public', file);
+        expect(fs.existsSync(filePath)).toBe(false);
+      }
+    });
   });
 });

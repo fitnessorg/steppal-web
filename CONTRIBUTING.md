@@ -25,7 +25,7 @@ None of the three repositories require each other to build or run locally.
 - **Zero accounts or external services required:** You do not need API keys, database credentials, or third-party accounts to build, develop, or test this site.
 - **Functional defaults:** The waitlist operates out of the box with an in-memory store that logs submissions directly to stdout. Optional durable backends (`steppal-core` Postgres or Resend) are activated seamlessly via environment variables.
 - **Rock-solid reliability:** Every commit must pass typechecks, linting, unit tests, and production static builds.
-- **Accessible & readable:** Reading pages (`/architecture`, `/contribute`, `/privacy`, `/terms`) are built for reading with standard measure and zero distracting animations.
+- **Accessible & readable:** Reading pages (`/architecture`, `/contribute`, `/changelog`, `/privacy`, `/terms`) are built for reading with standard measure and zero distracting animations.
 
 ---
 
@@ -71,19 +71,22 @@ npm run build
 
 ```text
 steppal-web/
-├── .agent/              # Agent briefs, multi-day development plan, and logs
 ├── .github/workflows/   # Continuous integration workflows
-├── public/              # Static assets (brand mark, icons, robots.txt)
+├── public/              # Static assets (compressed brand mark)
 ├── src/
-│   ├── app/             # Next.js App Router pages, layouts, and API routes
-│   │   ├── (prose)/     # Reading shell routes: /architecture, /contribute, /privacy, /terms
+│   ├── app/             # Next.js App Router pages, layouts, OG routes, and API routes
 │   │   ├── api/         # Route handlers (/api/waitlist)
+│   │   ├── architecture/# System architecture & protocol documentation
+│   │   ├── changelog/   # Ecosystem release & milestone log
+│   │   ├── contribute/  # Contributor onboarding guide
+│   │   ├── privacy/     # Plain-language privacy policy
+│   │   ├── terms/       # Plain-language terms of use
 │   │   ├── globals.css  # Design tokens, Tailwind v4 theme, and component layers
 │   │   └── not-found.tsx# Branded 404 recovery page
 │   ├── components/      # Reusable UI components (Prose, Header, ThemeToggle, MagneticButton)
 │   │   └── sections/    # Landing page sections (Hero, Showcase, HowItWorks, Waitlist, etc.)
-│   └── lib/             # Pure utility modules: motion tokens, site URL, waitlist storage
-└── test/                # Vitest test suites
+│   └── lib/             # Pure utility modules: motion, site URL, waitlist storage, changelog, OG card
+└── test/                # Vitest unit, integration, and SSR component test suites
 ```
 
 ---
