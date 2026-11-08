@@ -4,11 +4,49 @@ import { useState, useRef } from 'react';
 import { RevealText } from '@/components/RevealText';
 import { isPlausibleEmail } from '@/lib/waitlist';
 
-type State =
+export type WaitlistState =
   | { kind: 'idle' }
   | { kind: 'sending' }
   | { kind: 'done'; already: boolean }
   | { kind: 'error'; message: string };
+
+/**
+ * Pure state machine transition resolver for the waitlist submission lifecycle.
+ * Extracted so every error branch and status code can be unit tested directly.
+ */
+export async function resolveWaitlistSubmission(
+  email: string,
+  company: string,
+  fetchImpl: typeof fetch = fetch,
+): Promise<WaitlistState> {
+  if (!isPlausibleEmail(email)) {
+    return { kind: 'error', message: 'That does not look like an email address.' };
+  }
+
+  try {
+    const res = await fetchImpl('/api/waitlist', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ email, company }),
+    });
+
+    if (res.status === 429) {
+      return { kind: 'error', message: 'Too many tries. Give it an hour.' };
+    }
+
+    if (!res.ok) {
+      return {
+        kind: 'error',
+        message: 'Could not save that. Try again in a moment.',
+      };
+    }
+
+    const body = (await res.json()) as { status: 'added' | 'already_on_list' };
+    return { kind: 'done', already: body.status === 'already_on_list' };
+  } catch {
+    return { kind: 'error', message: 'Could not reach the server. Check your connection.' };
+  }
+}
 
 /**
  * The form posts to /api/waitlist and reports what actually happened.
@@ -21,7 +59,7 @@ type State =
 export function Waitlist() {
   const [email, setEmail] = useState('');
   const [company, setCompany] = useState('');
-  const [state, setState] = useState<State>({ kind: 'idle' });
+  const [state, setState] = useState<WaitlistState>({ kind: 'idle' });
   const submittingRef = useRef(false);
 
   const onSubmit = async (e: React.FormEvent) => {
@@ -43,27 +81,8 @@ export function Waitlist() {
     setState({ kind: 'sending' });
 
     try {
-      const res = await fetch('/api/waitlist', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ email, company }),
-      });
-
-      if (res.status === 429) {
-        return setState({ kind: 'error', message: 'Too many tries. Give it an hour.' });
-      }
-
-      if (!res.ok) {
-        return setState({
-          kind: 'error',
-          message: 'Could not save that. Try again in a moment.',
-        });
-      }
-
-      const body = (await res.json()) as { status: 'added' | 'already_on_list' };
-      setState({ kind: 'done', already: body.status === 'already_on_list' });
-    } catch {
-      setState({ kind: 'error', message: 'Could not reach the server. Check your connection.' });
+      const nextState = await resolveWaitlistSubmission(email, company);
+      setState(nextState);
     } finally {
       submittingRef.current = false;
     }
