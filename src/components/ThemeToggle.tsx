@@ -2,9 +2,21 @@
 
 import { useCallback, useSyncExternalStore } from 'react';
 
-type Theme = 'light' | 'dark' | 'system';
+export type Theme = 'light' | 'dark' | 'system';
 
-const STORAGE_KEY = 'theme';
+export const STORAGE_KEY = 'theme';
+
+export const NEXT_THEME: Record<Theme, Theme> = {
+  system: 'light',
+  light: 'dark',
+  dark: 'system',
+};
+
+export const THEME_LABEL: Record<Theme, string> = {
+  system: 'Auto',
+  light: 'Light',
+  dark: 'Dark',
+};
 
 /**
  * The stored theme, read as an external store rather than copied into state by
@@ -19,19 +31,27 @@ const STORAGE_KEY = 'theme';
  */
 const listeners = new Set<() => void>();
 
-function subscribe(listener: () => void) {
+export function subscribeTheme(listener: () => void) {
   listeners.add(listener);
   // Another tab changing the theme should change it here too.
-  window.addEventListener('storage', listener);
+  if (typeof window !== 'undefined') {
+    window.addEventListener('storage', listener);
+  }
   return () => {
     listeners.delete(listener);
-    window.removeEventListener('storage', listener);
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('storage', listener);
+    }
   };
 }
 
-function readTheme(): Theme {
+export function readTheme(): Theme {
   try {
-    return (localStorage.getItem(STORAGE_KEY) as Theme | null) ?? 'system';
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw === 'light' || raw === 'dark' || raw === 'system') {
+      return raw;
+    }
+    return 'system';
   } catch {
     // Private browsing and blocked site data both throw here.
     return 'system';
@@ -39,8 +59,28 @@ function readTheme(): Theme {
 }
 
 /** The server has no way to know, so it renders the default. */
-function serverTheme(): Theme {
+export function serverTheme(): Theme {
   return 'system';
+}
+
+export function applyTheme(next: Theme) {
+  try {
+    if (next === 'system') {
+      localStorage.removeItem(STORAGE_KEY);
+      document.documentElement.removeAttribute('data-theme');
+    } else {
+      localStorage.setItem(STORAGE_KEY, next);
+      document.documentElement.setAttribute('data-theme', next);
+    }
+  } catch {
+    // Still apply the attribute even if the choice cannot be remembered.
+    if (typeof document !== 'undefined') {
+      if (next === 'system') document.documentElement.removeAttribute('data-theme');
+      else document.documentElement.setAttribute('data-theme', next);
+    }
+  }
+
+  listeners.forEach((l) => l());
 }
 
 /**
@@ -51,37 +91,20 @@ function serverTheme(): Theme {
  * The no-flash script lives in layout.tsx and runs before paint.
  */
 export function ThemeToggle() {
-  const theme = useSyncExternalStore(subscribe, readTheme, serverTheme);
+  const theme = useSyncExternalStore(subscribeTheme, readTheme, serverTheme);
 
   const apply = useCallback((next: Theme) => {
-    try {
-      if (next === 'system') {
-        localStorage.removeItem(STORAGE_KEY);
-        document.documentElement.removeAttribute('data-theme');
-      } else {
-        localStorage.setItem(STORAGE_KEY, next);
-        document.documentElement.setAttribute('data-theme', next);
-      }
-    } catch {
-      // Still apply the attribute even if the choice cannot be remembered.
-      if (next === 'system') document.documentElement.removeAttribute('data-theme');
-      else document.documentElement.setAttribute('data-theme', next);
-    }
-
-    listeners.forEach((l) => l());
+    applyTheme(next);
   }, []);
-
-  const next: Record<Theme, Theme> = { system: 'light', light: 'dark', dark: 'system' };
-  const label: Record<Theme, string> = { system: 'Auto', light: 'Light', dark: 'Dark' };
 
   return (
     <button
       type="button"
-      onClick={() => apply(next[theme])}
-      aria-label={`Theme: ${label[theme]}. Click to change.`}
+      onClick={() => apply(NEXT_THEME[theme])}
+      aria-label={`Theme: ${THEME_LABEL[theme]}. Click to change.`}
       className="t-label rounded-full border border-surface-2 px-3 py-1.5 text-ink-soft transition-colors hover:border-flame hover:text-ink"
     >
-      {label[theme]}
+      {THEME_LABEL[theme]}
     </button>
   );
 }
